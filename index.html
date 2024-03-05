@@ -5,66 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSV to LST Converter</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        form {
-            margin-top: 20px;
-        }
-        input[type="file"] {
-            display: none;
-        }
-        .custom-file-upload {
-            border: 1px solid #ccc;
-            display: inline-block;
-            padding: 6px 12px;
-            cursor: pointer;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            color: #333;
-        }
-        .custom-file-upload:hover {
-            background-color: #e9e9e9;
-        }
-        #output {
-            margin-top: 20px;
-        }
-        .btn-convert {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin-top: 20px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .btn-convert:hover {
-            background-color: #0056b3;
-        }
+        /* Your CSS styles here */
     </style>
 </head>
 <body>
     <div class="container">
         <h1>CSV to LST Converter</h1>
-        <form id="csvForm">
+        <form id="csvForm" enctype="multipart/form-data">
             <label for="csvFile" class="custom-file-upload">
                 Select CSV File
                 <input type="file" id="csvFile" accept=".csv">
@@ -80,14 +27,18 @@
             const file = fileInput.files[0];
 
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const content = e.target.result;
-                    // Your CSV to LST conversion logic goes here
-                    // Display or save the converted content as per your requirement
-                    document.getElementById('output').innerText = 'Conversion Completed!';
-                }
-                reader.readAsText(file);
+                const formData = new FormData();
+                formData.append('csvFile', file);
+
+                fetch('/convert', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('output').innerText = data;
+                })
+                .catch(error => console.error('Error:', error));
             } else {
                 alert('Please select a CSV file.');
             }
