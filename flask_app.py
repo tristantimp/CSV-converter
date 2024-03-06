@@ -2,7 +2,7 @@ from flask import Flask, request, render_template
 import os
 import csv
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="baller")
 
 @app.route('/')
 def home():
