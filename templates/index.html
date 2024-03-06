@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV to LST Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+        p {
+            text-align: center;
+            color: #333;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        form {
+            margin-top: 20px;
+            text-align: center;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .custom-file-upload {
+            border: 2px solid #007bff;
+            display: inline-block;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #007bff;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .custom-file-upload:hover {
+            background-color: #0056b3;
+        }
+        #output {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #333333;
+        }
+        .btn-convert {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+        .btn-convert:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CSV to LST Converter</h1>
+        <p>This program was designed with WebWork in mind as it only accepts file type .lst. Hopefully this is of use to you.</p>
+        <form id="csvForm">
+            <label for="csvFile" class="custom-file-upload">
+                Select CSV File
+                <input type="file" id="csvFile" accept=".csv" onchange="displayFileName()">
+            </label>
+            <div id="selectedFile" style="text-align: center; margin-top: 10px;"></div>
+            <div id="output"></div>
+            <button type="button" class="btn-convert" onclick="convertCSVtoLST()">Convert to LST</button>
+        </form>
+    </div>
+
+    <script>
+        function displayFileName() {
+            const fileInput = document.getElementById('csvFile');
+            const fileName = fileInput.files[0].name;
+            document.getElementById('selectedFile').innerText = `Selected File: ${fileName}`;
+        }
+
+        function convertCSVtoLST() {
+            const fileInput = document.getElementById('csvFile');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const formData = new FormData();
+                formData.append('csvFile', file);
+
+                fetch('/convert', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('output').innerText = data;
+                })
+                .catch(error => console.error('Error:', error));
+            } else {
+                alert('Please select a CSV file.');
+            }
+        }
+    </script>
+</body>
+</html>
