@@ -1,0 +1,4 @@
+.env
+fake_student_list.lst
+/build/
+csv_to_lst_app.spec
